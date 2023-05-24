@@ -1,0 +1,8 @@
+-------------------
+New Best Found
+d:  470.93842172582566
+detla:  0.9384217258256626
+frame_id:  436
+-------------------
+
+Only up to frame 972 was tested, since some frames dont work, not sure why
