@@ -1,6 +1,11 @@
+Note: The image where not undistorted before
+
 -------------------
 New Best Found
 d:  469.8105988107843
 detla:  0.18940118921568683
 frame_id:  1270
 -------------------
+
+Far:  706.7086285026313
+Near:  327.9836657923837
