@@ -115,18 +115,23 @@ frame_count = 0
 best_frame_id = 0
 best_d = math.inf
 best_delta = math.inf
+best_K = None
 while succes:
     video.set(cv.CAP_PROP_POS_FRAMES, frame_count)
     succes, frame = video.read()
     
+    if(succes == False):
+        continue
     K = calc_K(frame)
     if(K is None):
+        frame_count = frame_count + 1
         continue
-    d = calcDistanzeForFrame(K, corners, CHESS_BOARD_PATTERN_WITDH_7x7) # Wrong we need the cornes of a singel frame, not every frame
+    d = calcDistanzeForFrame(K, corners, CHESS_BOARD_PATTERN_WITDH_7x7)
     if(np.abs(d - 470) < best_delta):
         best_frame_id = frame_count
         best_d = d
         best_delta = np.abs(d - 470)
+        best_K = K
 
         print("-------------------")
         print("New Best Found")
