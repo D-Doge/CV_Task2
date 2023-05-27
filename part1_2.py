@@ -11,7 +11,7 @@ def mirror_grid_anti_diagonal(grid, size=7):
     return mirrored_grid
 
 def mirro_corner_on_vertical_axis(corners):
-    print(corners[0:7])
+    #print(corners[0:7])
     corners[0:7] = (corners[0:7])[::-1]
     corners[7:14] = (corners[7:14])[::-1]
     corners[14:21] = (corners[14:21])[::-1]
@@ -19,8 +19,8 @@ def mirro_corner_on_vertical_axis(corners):
     corners[28:35] = (corners[28:35])[::-1]
     corners[35:42] = (corners[35:42])[::-1]
     corners[42:] = (corners[42:])[::-1]
-    print(corners[0:7])
-    print("")
+    #print(corners[0:7])
+    #print("")
     return corners
 
 def mirro_corner_on_horizontal_axis(corners):
@@ -50,9 +50,9 @@ for i in range(60):
     if ret:
         frames.append(frame)
 
-#frames = list()
-#frame_count = 0
-succes = False
+frames = list()
+frame_count = 0
+succes = True
 while succes:
     video.set(cv.CAP_PROP_POS_FRAMES, frame_count)
     succes, frame = video.read()
@@ -105,22 +105,62 @@ cv.destroyAllWindows()
 ret, mtx, dist, rvecs, tvecs = cv.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
 
 img = frames[3]
-cv.imshow('img', img)
-cv.waitKey()
-cv.imwrite('frame.png', img)
+#cv.imshow('img', img)
+#cv.waitKey()
+#cv.imwrite('frame.png', img)
 h,  w = img.shape[:2]
 newcameramtx, roi = cv.getOptimalNewCameraMatrix(mtx, dist, (w,h), 1, (w,h))
 
 # undistort
 dst = cv.undistort(img, mtx, dist, None, newcameramtx)
-cv.imshow('img', dst)
-cv.waitKey()
-cv.imwrite('Result.png', dst)
+#cv.imshow('img', dst)
+#cv.waitKey()
+#cv.imwrite('Result.png', dst)
 # crop the image
 x, y, w, h = roi
 
 dst = dst[y:y+h, x:x+w]
 
-cv.imshow('img', dst)
-cv.waitKey()
-cv.imwrite('ResultCropped.png', dst)
+#cv.imshow('img', dst)
+#cv.waitKey()
+#cv.imwrite('ResultCropped.png', dst)
+
+frame_width = int(video.get(3))
+frame_height = int(video.get(4))
+   
+size = (frame_width, frame_height)
+result_noCrop = cv.VideoWriter('result_noCrop.avi', 
+                         cv.VideoWriter_fourcc(*'MJPG'),
+                         fps, size)
+result_Crop = cv.VideoWriter('result_Crop.avi', 
+                         cv.VideoWriter_fourcc(*'MJPG'),
+                         fps, (w, h))
+
+frame_count = 0
+
+while(True):
+    video.set(cv.CAP_PROP_POS_FRAMES, frame_count)
+    ret, frame = video.read()
+  
+    if ret == True: 
+  
+        # Write the frame into the
+        # file 'filename.avi'
+        dst = cv.undistort(frame, mtx, dist, None, newcameramtx)
+        result_noCrop.write(dst)
+
+        dst = dst[y:y+h, x:x+w]
+        result_Crop.write(dst)
+
+        frame_count = frame_count + 1
+        print(frame_count)
+    # Break the loop
+    else:
+        break
+  
+# When everything done, release 
+# the video capture and video 
+# write objects
+video.release()
+result_noCrop.release()
+result_Crop.release()
