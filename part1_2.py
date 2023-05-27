@@ -3,6 +3,37 @@ import cv2 as cv
 import glob
 
 
+def mirror_grid_anti_diagonal(grid, size=7):
+    mirrored_grid = np.empty_like(grid)
+    for i in range(size):
+        for j in range(size):
+            mirrored_grid[i * size + j] = grid[(size - j - 1) * size + (size - i - 1)]
+    return mirrored_grid
+
+def mirro_corner_on_vertical_axis(corners):
+    print(corners[0:7])
+    corners[0:7] = (corners[0:7])[::-1]
+    corners[7:14] = (corners[7:14])[::-1]
+    corners[14:21] = (corners[14:21])[::-1]
+    corners[21:28] = (corners[21:28])[::-1]
+    corners[28:35] = (corners[28:35])[::-1]
+    corners[35:42] = (corners[35:42])[::-1]
+    corners[42:] = (corners[42:])[::-1]
+    print(corners[0:7])
+    print("")
+    return corners
+
+def mirro_corner_on_horizontal_axis(corners):
+    temp = np.copy(corners)
+    corners[0:7] = temp[42:]
+    corners[7:14] = temp[35:42]
+    corners[14:21] = temp[28:35]
+    #corners[21:28] = temp[21:28]
+    corners[28:35] = temp[14:21]
+    corners[35:42] = temp[7:14]
+    corners[42:] = temp[0:7]
+
+    return corners
 
 
 video = cv.VideoCapture('videoWW1_calibration.avi')
@@ -19,16 +50,16 @@ for i in range(60):
     if ret:
         frames.append(frame)
 
-frames = list()
-frame_count = 0
-succes = True
+#frames = list()
+#frame_count = 0
+succes = False
 while succes:
     video.set(cv.CAP_PROP_POS_FRAMES, frame_count)
     succes, frame = video.read()
     
     if(succes == False):
         continue
-    if(frame_count % 7 == 0):
+    if(frame_count % 10 == 0):
         frames.append(frame)
 
     frame_count = frame_count + 1
@@ -50,16 +81,25 @@ for frame in frames:
     # Find the chess board corners
     ret, corners = cv.findChessboardCorners(gray, (7,7), None)
     # If found, add object points, image points (after refining them)
-    if ret == True:
-        # the 0 0 point should be above the 0 1 point and left to point 1 1
-        if corners[0][0][1] < corners[7][0][1] and corners[0][0][0] < corners[8][0][0]:
-            objpoints.append(objp)
-            corners2 = cv.cornerSubPix(gray,corners, (11,11), (-1,-1), criteria)
-            imgpoints.append(corners2)
-            # Draw and display the corners
-            #cv.drawChessboardCorners(img, (7,7), corners2, ret)
-            #cv.imshow('img', img)
-            #cv.waitKey(500)
+    if ret == True:       
+        objpoints.append(objp)
+        corners2 = cv.cornerSubPix(gray,corners, (11,11), (-1,-1), criteria)
+
+        if corners2[0][0][1] > corners2[8][0][1]: 
+            corners2 = mirro_corner_on_horizontal_axis(corners2)
+
+        if corners2[0][0][0] > corners2[8][0][0]: 
+            corners2 = mirro_corner_on_vertical_axis(corners2)
+
+        if corners2[0][0][1] > corners2[8][0][1] and corners2[0][0][0] > corners2[8][0][0]:
+            #flip on the diagonal
+            corners2 = mirror_grid_anti_diagonal(corners2)
+
+        imgpoints.append(corners2)
+        # Draw and display the corners
+        #cv.drawChessboardCorners(img, (7,7), corners2, ret)
+        #cv.imshow('img', img)
+        #cv.waitKey(500)
 cv.destroyAllWindows()
 
 ret, mtx, dist, rvecs, tvecs = cv.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
