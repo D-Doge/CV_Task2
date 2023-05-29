@@ -66,6 +66,13 @@ while succes:
 
 print("Number of Frames: ", len(frames))
 
+frame_width = int(video.get(3))
+frame_height = int(video.get(4))
+size = (frame_width, frame_height)
+result_chess = cv.VideoWriter('result_chess.avi', 
+                         cv.VideoWriter_fourcc(*'MJPG'),
+                         fps, size)
+
 # termination criteria
 criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 # prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(6,6,0)
@@ -97,14 +104,15 @@ for frame in frames:
 
         imgpoints.append(corners2)
         # Draw and display the corners
-        #cv.drawChessboardCorners(img, (7,7), corners2, ret)
+        cv.drawChessboardCorners(img, (7,7), corners2, ret)
+        result_chess.write(img)
         #cv.imshow('img', img)
         #cv.waitKey(500)
 cv.destroyAllWindows()
 
 ret, mtx, dist, rvecs, tvecs = cv.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
 
-img = frames[3]
+img = frames[100]
 #cv.imshow('img', img)
 #cv.waitKey()
 #cv.imwrite('frame.png', img)
@@ -125,16 +133,16 @@ dst = dst[y:y+h, x:x+w]
 #cv.waitKey()
 #cv.imwrite('ResultCropped.png', dst)
 
-frame_width = int(video.get(3))
-frame_height = int(video.get(4))
+
    
-size = (frame_width, frame_height)
+
 result_noCrop = cv.VideoWriter('result_noCrop.avi', 
                          cv.VideoWriter_fourcc(*'MJPG'),
                          fps, size)
 result_Crop = cv.VideoWriter('result_Crop.avi', 
                          cv.VideoWriter_fourcc(*'MJPG'),
                          fps, (w, h))
+
 
 frame_count = 0
 
@@ -162,5 +170,6 @@ while(True):
 # the video capture and video 
 # write objects
 video.release()
+result_chess.release()
 result_noCrop.release()
 result_Crop.release()
