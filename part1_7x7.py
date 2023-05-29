@@ -59,7 +59,7 @@ while succes:
     
     if(succes == False):
         continue
-    if(frame_count % 10 == 0):
+    if(frame_count % 5 == 0):
         frames.append(frame)
 
     frame_count = frame_count + 1
@@ -112,6 +112,8 @@ cv.destroyAllWindows()
 
 ret, mtx, dist, rvecs, tvecs = cv.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
 
+print("Distance Co:", dist)
+
 img = frames[100]
 #cv.imshow('img', img)
 #cv.waitKey()
@@ -161,7 +163,7 @@ while(True):
         result_Crop.write(dst)
 
         frame_count = frame_count + 1
-        print(frame_count)
+        #print(frame_count)
     # Break the loop
     else:
         break

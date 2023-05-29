@@ -57,7 +57,7 @@ while succes:
     
     if(succes == False):
         continue
-    if(frame_count % 10 == 0):
+    if(frame_count % 1 == 0):
         frames.append(frame)
 
     frame_count = frame_count + 1
