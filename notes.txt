@@ -22,3 +22,11 @@ Number of Frames:  280
 Distance Co: [[ 3.45866053e+00 -5.62443249e+01 -3.44830076e-03 -5.56136397e-01
    5.43896660e+02]]
 This basically looks the same, as usineg only 140 frames
+
+
+frames per second = 10.0
+Number of Frames:  1400
+Found 1200 valid images for calibration
+K=np.array([[629.5839321606594, 0.0, 608.19396935907], [0.0, 629.4568464605697, 458.87021072414217], [0.0, 0.0, 1.0]])
+D=np.array([[-0.040474724785483605], [0.003956646811663794], [-0.003189698934685078], [-0.0005331238368586522]])
+PS E:\Uni\CV\CV_Task2> 
