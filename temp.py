@@ -170,3 +170,5 @@ corners = getCornersOfFrame(frame_for_calc)
 d = calcDistanzeForFrame(best_K, corners, CHESS_BOARD_PATTERN_WITDH_7x7)
 
 print("Near: ", d)
+
+print(best_K)

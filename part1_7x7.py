@@ -36,7 +36,7 @@ def mirro_corner_on_horizontal_axis(corners):
     return corners
 
 
-video = cv.VideoCapture('videoWW1_calibration.avi')
+video = cv.VideoCapture('videoWW2_calibration.avi')
 fps = video.get(cv.CAP_PROP_FPS)
 print('frames per second =',fps)
 
@@ -59,7 +59,7 @@ while succes:
     
     if(succes == False):
         continue
-    if(frame_count % 5 == 0):
+    if(frame_count % 20 == 0):
         frames.append(frame)
 
     frame_count = frame_count + 1
@@ -112,7 +112,12 @@ cv.destroyAllWindows()
 
 ret, mtx, dist, rvecs, tvecs = cv.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
 
-print("Distance Co:", dist)
+print("-----------------------------")
+print("Distance Co: ", dist)
+
+print("-----------------------------")
+print("K: ", mtx)
+
 
 img = frames[100]
 #cv.imshow('img', img)
